@@ -1,15 +1,34 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import bandeArchitekturFelder from '../assets/sponsors/bande-architektur-felder.jpg';
+import bandeUnlabeled from '../assets/sponsors/bande-unlabeled.png';
+
+const banden = [
+  { name: 'Architektur Felder', logo: bandeArchitekturFelder },
+  { name: 'Bandenwerber', logo: bandeUnlabeled },
+];
 ---
 <BaseLayout title="Bandenwerber">
   <section class="wrap">
     <h1>Bandenwerber</h1>
     <p>Werben Sie mit einer Bande auf der Thermoplan Arena oder der Black&amp;White Arena. Verträge über 1 oder 3 Jahre.</p>
     <p>Kontakt: <a href="mailto:sponsoring@weggisersc.ch">sponsoring@weggisersc.ch</a></p>
+
+    <div class="banden-grid">
+      {banden.map((b) => (
+        <div class="card">
+          <Image src={b.logo} alt={b.name} width={640} height={150} format="png" />
+        </div>
+      ))}
+    </div>
+
     <p><a href="/arena">← Zurück zu Arena</a></p>
   </section>
 </BaseLayout>
 
 <style>
   section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  .banden-grid { display: grid; gap: var(--wsc-space-3); margin: var(--wsc-space-4) 0; }
+  .banden-grid :global(img) { display: block; width: 100%; height: auto; }
 </style>

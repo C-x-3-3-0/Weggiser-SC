@@ -1,15 +1,20 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import logo100er from '../../assets/brand/logo-100er-club.jpeg';
+import logoGoennerclub from '../../assets/brand/logo-goennerclub-pro-wsc.jpg';
 ---
 <BaseLayout title="Gönner">
   <section class="wrap">
     <h1>Gönner</h1>
     <div class="grid">
       <div class="card">
+        <Image src={logo100er} alt="WSC 100er Club" width={320} height={184} class="goenner-logo" />
         <h3>100er Club</h3>
         <p>CHF 100.– pro Jahr, unterstützt die Junioren*innen-Förderung.</p>
       </div>
       <div class="card">
+        <Image src={logoGoennerclub} alt="Gönnerclub pro WSC" width={320} height={57} class="goenner-logo" />
         <h3>Gönnerclub pro WSC (500er)</h3>
         <p>CHF 500.– pro Jahr.</p>
       </div>
@@ -21,4 +26,5 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 <style>
   section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
   .grid { display: grid; gap: var(--wsc-space-3); margin: var(--wsc-space-3) 0; }
+  .goenner-logo { display: block; max-width: 220px; height: auto; margin-bottom: var(--wsc-space-2); }
 </style>

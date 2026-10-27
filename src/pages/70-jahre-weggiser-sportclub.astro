@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import jubilaeumTeaser from '../assets/brand/70-jahre-wsc.jpg';
+---
+<BaseLayout title="70 Jahre Weggiser Sportclub">
+  <section class="wrap">
+    <Image src={jubilaeumTeaser} alt="70 Jahre Weggiser Sportclub" width={1024} height={775} class="teaser" />
+    <h1>70 Jahre Weggiser Sportclub</h1>
+    <p>Am 19.11.1955 gründeten Anton „Pulcy“ Ebnöther und 11 Lehrlinge den Weggiser Sportclub. In der Saison 2025/26 feiert der Verein sein 70-Jahre-Jubiläum.</p>
+    <p>Programm und Jubiläumsanlässe folgen.</p>
+    <p><a href="/aktuelles">← Zurück zu Aktuelles</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  .teaser { display: block; width: 100%; height: auto; border-radius: var(--wsc-radius); margin-bottom: var(--wsc-space-3); }
+</style>

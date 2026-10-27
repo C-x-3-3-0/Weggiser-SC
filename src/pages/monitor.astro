@@ -1,15 +1,14 @@
 ---
 import MonitorLayout from '../layouts/MonitorLayout.astro';
+import { Image } from 'astro:assets';
+import wscLogo from '../assets/brand/wsc-logo.png';
 import matchdaySeed from '../../public/data/matchday.json';
 ---
 <MonitorLayout title="Matchday – Weggiser Sportclub">
   <div class="monitor">
     <header class="monitor-header">
       <div class="brand">
-        <svg width="90" height="90" viewBox="0 0 44 44" role="img" aria-label="Weggiser Sportclub – Logo">
-          <rect width="44" height="44" rx="6" fill="var(--wsc-brand-secondary)" />
-          <text x="22" y="28" text-anchor="middle" font-family="var(--wsc-font-display)" font-size="16" font-weight="700" fill="#fff">WSC</text>
-        </svg>
+        <Image src={wscLogo} alt="Weggiser Sportclub – Logo" width={320} height={222} format="png" />
       </div>
       <div class="clock-block">
         <div id="clock" class="clock tabular">--:--</div>
@@ -135,6 +134,18 @@ import matchdaySeed from '../../public/data/matchday.json';
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .brand {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+  }
+  .brand :global(img) {
+    display: block;
+    height: 90px;
+    width: auto;
   }
   .clock-block { text-align: right; }
   .clock { font-size: 64px; font-weight: 700; font-family: var(--wsc-font-display); }

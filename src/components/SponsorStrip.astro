@@ -1,29 +1,38 @@
 ---
-// Placeholder text logos for the POC — swap for real sponsor artwork
-// from src/assets (see wsc-brand skill, references/assets.md) before launch.
+import { Image } from 'astro:assets';
+import thermoplan from '../assets/sponsors/thermoplan.jpg';
+import catenazziBau from '../assets/sponsors/catenazzi-bau.png';
+import rodaro from '../assets/sponsors/rodaro.jpg';
+import rigiSport from '../assets/sponsors/rigi-sport.png';
+import fuechsliShop from '../assets/sponsors/fuechsli-shop.jpg';
+import gemeindeWeggis from '../assets/sponsors/gemeinde-weggis.png';
+import swisslosSportfonds from '../assets/sponsors/swisslos-sportfonds.png';
+import schaetzle from '../assets/sponsors/schaetzle.png';
+import avia from '../assets/sponsors/avia.png';
+
 const groups = [
   {
     label: 'Dress-Sponsoren',
     sponsors: [
-      { name: 'Thermoplan', href: 'https://thermoplan.ch' },
-      { name: 'Catenazzi Bau', href: 'https://catenazzi-bau.ch' },
-      { name: 'Rodaro', href: 'https://rodaro.ch' },
+      { name: 'Thermoplan', href: 'https://thermoplan.ch', logo: thermoplan },
+      { name: 'Catenazzi Bau', href: 'https://catenazzi-bau.ch', logo: catenazziBau },
+      { name: 'Rodaro', href: 'https://rodaro.ch', logo: rodaro },
     ],
   },
   {
     label: 'Ausrüster',
     sponsors: [
-      { name: 'Rigi Sport', href: 'https://rigi-sport.ch' },
-      { name: 'Füchsli Shop', href: 'https://fuechsli-shop.ch/wsc-shop' },
+      { name: 'Rigi Sport', href: 'https://rigi-sport.ch', logo: rigiSport },
+      { name: 'Füchsli Shop', href: 'https://fuechsli-shop.ch/wsc-shop', logo: fuechsliShop },
     ],
   },
   {
     label: 'Partner',
     sponsors: [
-      { name: 'Gemeinde Weggis', href: 'https://gemeinde-weggis.ch' },
-      { name: 'Swisslos Sportfonds Luzern', href: 'https://sport.lu.ch/swisslos' },
-      { name: 'Schätzle', href: null },
-      { name: 'AVIA', href: null },
+      { name: 'Gemeinde Weggis', href: 'https://gemeinde-weggis.ch', logo: gemeindeWeggis },
+      { name: 'Swisslos Sportfonds Luzern', href: 'https://sport.lu.ch/swisslos', logo: swisslosSportfonds },
+      { name: 'Schätzle', href: null, logo: schaetzle },
+      { name: 'AVIA', href: null, logo: avia },
     ],
   },
 ];
@@ -36,9 +45,13 @@ const groups = [
         {group.sponsors.map((s) => (
           <li>
             {s.href ? (
-              <a href={s.href} rel="noopener sponsored" class="sponsor-logo">{s.name}</a>
+              <a href={s.href} rel="noopener sponsored" class="sponsor-logo">
+                <Image src={s.logo} alt={s.name} width={160} height={60} format="png" />
+              </a>
             ) : (
-              <span class="sponsor-logo">{s.name}</span>
+              <span class="sponsor-logo">
+                <Image src={s.logo} alt={s.name} width={160} height={60} format="png" />
+              </span>
             )}
           </li>
         ))}
@@ -61,18 +74,29 @@ const groups = [
   .sponsor-list {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--wsc-space-2);
   }
   .sponsor-logo {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
     padding: 0.5em 1em;
     background: var(--wsc-paper);
     border: 1px solid var(--wsc-line);
     border-radius: var(--wsc-radius);
-    color: var(--wsc-ink);
-    font-size: var(--wsc-step--1);
-    font-weight: 600;
+    filter: grayscale(1);
+    opacity: 0.8;
+    transition: filter 0.15s, opacity 0.15s;
   }
-  a.sponsor-logo:hover { color: var(--wsc-brand-secondary); border-color: var(--wsc-brand-secondary); text-decoration: none; }
+  .sponsor-logo :global(img) {
+    display: block;
+    max-height: 32px;
+    max-width: 120px;
+    width: auto;
+    height: auto;
+  }
+  a.sponsor-logo:hover { filter: grayscale(0); opacity: 1; }
   .sponsor-note { font-size: var(--wsc-step--1); }
 </style>

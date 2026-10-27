@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import jubilaeumTeaser from '../assets/brand/70-jahre-wsc.jpg';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 const newsEntries: CollectionEntry<'news'>[] = await getCollection('news');
@@ -19,6 +21,11 @@ const news = newsEntries
       </div>
     </div>
   </section>
+
+  <a href="/70-jahre-weggiser-sportclub" class="jubilee">
+    <Image src={jubilaeumTeaser} alt="70 Jahre Weggiser Sportclub" width={1024} height={200} />
+    <span class="jubilee-label">70 Jahre Weggiser Sportclub – Jubiläumssaison 2025/26 →</span>
+  </a>
 
   <section class="wrap">
     <h2>Aktuelles</h2>
@@ -78,4 +85,25 @@ const news = newsEntries
   }
   .news-card { text-decoration: none; color: var(--wsc-ink); }
   .news-card time { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+  .jubilee {
+    position: relative;
+    display: block;
+    text-decoration: none;
+  }
+  .jubilee :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    object-fit: cover;
+  }
+  .jubilee-label {
+    position: absolute;
+    inset: auto 0 0 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: #fff;
+    padding: var(--wsc-space-3);
+    font-weight: 700;
+    text-decoration: none;
+  }
 </style>

@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MatchRow from '../components/MatchRow.astro';
+import { Image } from 'astro:assets';
+import thermoplanPhoto from '../assets/arena/thermoplan-arena.jpg';
+import blackWhitePhoto from '../assets/arena/black-and-white-arena.jpg';
 import matchday from '../../public/data/matchday.json';
 
 const todaysMatches = matchday.matches;
@@ -9,12 +12,14 @@ const todaysMatches = matchday.matches;
   <section class="wrap">
     <h1>Arena</h1>
     <div class="grid">
-      <div class="card">
+      <div class="card arena-card">
+        <Image src={thermoplanPhoto} alt="Thermoplan Arena" width={480} height={320} class="arena-photo" />
         <span class="pill pill--natural">Naturrasen</span>
         <h3>Thermoplan Arena</h3>
         <p>Hauptfeld, 105 × 68 m. 1.-Liga-Lizenz, 200 Sitzplätze / 1050 Stehplätze.</p>
       </div>
-      <div class="card">
+      <div class="card arena-card">
+        <Image src={blackWhitePhoto} alt="Black&White Arena" width={480} height={320} class="arena-photo" />
         <span class="pill pill--artificial">Kunstrasen</span>
         <h3>Black&amp;White Arena</h3>
         <p>Allwetterplatz, 100 × 64 m. 2.-Liga-interregional-Lizenz. Keine Stollenschuhe.</p>
@@ -53,6 +58,18 @@ const todaysMatches = matchday.matches;
     margin: var(--wsc-space-3) 0;
   }
   .grid h3 { margin: var(--wsc-space-1) 0; }
+  .arena-card { padding: 0; overflow: hidden; }
+  .arena-card :global(.arena-photo) {
+    display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  .arena-card .pill,
+  .arena-card h3,
+  .arena-card p { margin-left: var(--wsc-space-3); margin-right: var(--wsc-space-3); }
+  .arena-card .pill { margin-top: var(--wsc-space-3); }
+  .arena-card p { margin-bottom: var(--wsc-space-3); }
   .today { margin-top: var(--wsc-space-6); }
   .today-rows { display: grid; gap: var(--wsc-space-2); margin: var(--wsc-space-3) 0; }
   .tv-hint { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
