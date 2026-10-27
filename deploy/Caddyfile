@@ -1,0 +1,13 @@
+# POC placeholder — adjust host, TLS and paths before using on the real server.
+neu.weggisersc.ch {
+    root * /srv/weggisersc/dist
+    file_server
+    encode gzip
+
+    # Old Wix slugs -> new clean slugs
+    redir /kopie-von-aktive /mannschaften/wsc-2 permanent
+    redir /aktive /mannschaften/wsc-1 permanent
+    redir /gönner /goenner permanent
+
+    try_files {path} {path}/ =404
+}

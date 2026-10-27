@@ -1,0 +1,19 @@
+{
+  "_comment": "Changing room defaults per team, per the Reglement Garderobengebäude. Numbers are POC placeholders — replace with the real assignments before go-live. Can be overridden per game in matchday.json.",
+  "defaults": {
+    "WSC I": "1",
+    "WSC II": "2",
+    "Senioren 30+": "3",
+    "Junioren Ca": "4",
+    "Junioren Cb": "4",
+    "Junioren D/9": "5",
+    "Junioren D/7-rot": "5",
+    "Junioren D/7-weiss": "5",
+    "Junioren E": "6",
+    "Junioren F-rot": "6",
+    "Junioren F-weiss": "6",
+    "Junioren G": "6",
+    "Mädchen FF-17": "7",
+    "Mädchen FF-14": "7"
+  }
+}

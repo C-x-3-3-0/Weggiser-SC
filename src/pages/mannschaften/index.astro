@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const teamEntries: CollectionEntry<'teams'>[] = await getCollection('teams');
+const teams = teamEntries.sort((a, b) => a.data.order - b.data.order);
+
+const categories: Array<{ key: string; label: string }> = [
+  { key: 'Aktive', label: 'Aktive' },
+  { key: 'Senioren', label: 'Senioren' },
+  { key: 'Junioren', label: 'Junioren*innen' },
+  { key: 'Maedchen', label: 'Mädchen' },
+];
+---
+<BaseLayout title="Mannschaften">
+  <section class="wrap">
+    <h1>Mannschaften</h1>
+    {categories.map((cat) => {
+      const group = teams.filter((t) => t.data.category === cat.key);
+      if (group.length === 0) return null;
+      return (
+        <div class="category-block">
+          <h2>{cat.label}</h2>
+          <div class="team-grid">
+            {group.map((team) => (
+              <TeamCard
+                name={team.data.name}
+                category={cat.label}
+                coaches={team.data.coaches}
+                slug={team.id}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    })}
+  </section>
+</BaseLayout>
+
+<style>
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); }
+  .category-block { margin-bottom: var(--wsc-space-6); }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--wsc-space-3);
+  }
+</style>

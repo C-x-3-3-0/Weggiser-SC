@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchRow from '../components/MatchRow.astro';
+import matchday from '../../public/data/matchday.json';
+
+const todaysMatches = matchday.matches;
+---
+<BaseLayout title="Arena">
+  <section class="wrap">
+    <h1>Arena</h1>
+    <div class="grid">
+      <div class="card">
+        <span class="pill pill--natural">Naturrasen</span>
+        <h3>Thermoplan Arena</h3>
+        <p>Hauptfeld, 105 × 68 m. 1.-Liga-Lizenz, 200 Sitzplätze / 1050 Stehplätze.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill--artificial">Kunstrasen</span>
+        <h3>Black&amp;White Arena</h3>
+        <p>Allwetterplatz, 100 × 64 m. 2.-Liga-interregional-Lizenz. Keine Stollenschuhe.</p>
+      </div>
+    </div>
+    <p><a href="/bandenwerber">Bandenwerbung auf der Arena →</a></p>
+
+    {todaysMatches.length > 0 && (
+      <div class="today">
+        <h2>Heute auf der Arena</h2>
+        <div class="today-rows">
+          {todaysMatches.map((m) => (
+            <MatchRow
+              time={m.time}
+              home={m.home}
+              away={m.away}
+              field={m.field as 'Thermoplan Arena' | 'Black&White Arena'}
+              garderobeHeim={m.garderobeHeim}
+              garderobeGast={m.garderobeGast}
+              status={m.status as 'live' | 'verschoben' | 'abgesagt' | null}
+            />
+          ))}
+        </div>
+        <p class="tv-hint">Volle Übersicht inkl. Garderoben: <a href="/monitor">Matchday-Monitor →</a></p>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--wsc-space-3);
+    margin: var(--wsc-space-3) 0;
+  }
+  .grid h3 { margin: var(--wsc-space-1) 0; }
+  .today { margin-top: var(--wsc-space-6); }
+  .today-rows { display: grid; gap: var(--wsc-space-2); margin: var(--wsc-space-3) 0; }
+  .tv-hint { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+</style>

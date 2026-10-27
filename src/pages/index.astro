@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const newsEntries: CollectionEntry<'news'>[] = await getCollection('news');
+const news = newsEntries
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+<BaseLayout title="Willkommen" description="Der Weggiser Sportclub legt grossen Wert darauf, dass sich die Teams aus Einheimischen der Seegemeinden zusammensetzen und investiert sehr viel in die Nachwuchsförderung.">
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Weggiser Sportclub</p>
+      <h1>Der Fussballclub der Seegemeinden</h1>
+      <p class="lead">Gegründet 1955. Von den Junioren G bis zu den Senioren 30+ – zuhause auf der Thermoplan Arena und der Black&amp;White Arena.</p>
+      <div class="hero-actions">
+        <a class="btn" href="/mannschaften">Unsere Mannschaften</a>
+        <a class="btn btn--outline" href="/verein">Verein &amp; Vorstand</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Aktuelles</h2>
+    <div class="news-grid">
+      {news.map((post) => (
+        <a href={`/aktuelles/${post.id}`} class="card news-card">
+          <time class="tabular">{post.data.date.toLocaleDateString('de-CH')}</time>
+          <h3>{post.data.title}</h3>
+        </a>
+      ))}
+    </div>
+    <p><a href="/aktuelles">Alle Meldungen →</a></p>
+  </section>
+
+  <section class="wrap arenas">
+    <h2>Unsere Plätze</h2>
+    <div class="arena-grid">
+      <div class="card">
+        <h3>Thermoplan Arena</h3>
+        <p>Naturrasen, 105 × 68 m. Hauptfeld, 1.-Liga-Lizenz, 200 Sitz- / 1050 Stehplätze.</p>
+      </div>
+      <div class="card">
+        <h3>Black&amp;White Arena</h3>
+        <p>Kunstrasen, 100 × 64 m. Allwetterplatz für 2.-Liga-interregional – keine Stollenschuhe.</p>
+      </div>
+    </div>
+    <p><a href="/arena">Mehr zur Arena →</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: var(--wsc-surface);
+    padding: var(--wsc-space-8) 0;
+    border-bottom: 1px solid var(--wsc-line);
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wsc-brand-secondary);
+    font-weight: 700;
+    font-size: var(--wsc-step--1);
+  }
+  .lead { max-width: 640px; color: var(--wsc-muted); font-size: var(--wsc-step-1); }
+  .hero-actions { display: flex; gap: var(--wsc-space-2); margin-top: var(--wsc-space-3); flex-wrap: wrap; }
+  .btn--outline {
+    background: transparent;
+    color: var(--wsc-brand-primary);
+    border: 2px solid var(--wsc-brand-primary);
+  }
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); }
+  .news-grid, .arena-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--wsc-space-3);
+    margin: var(--wsc-space-3) 0;
+  }
+  .news-card { text-decoration: none; color: var(--wsc-ink); }
+  .news-card time { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+</style>

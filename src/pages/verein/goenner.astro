@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Gönner">
+  <section class="wrap">
+    <h1>Gönner</h1>
+    <div class="grid">
+      <div class="card">
+        <h3>100er Club</h3>
+        <p>CHF 100.– pro Jahr, unterstützt die Junioren*innen-Förderung.</p>
+      </div>
+      <div class="card">
+        <h3>Gönnerclub pro WSC (500er)</h3>
+        <p>CHF 500.– pro Jahr.</p>
+      </div>
+    </div>
+    <p><a href="/verein">← Zurück zu Verein</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  .grid { display: grid; gap: var(--wsc-space-3); margin: var(--wsc-space-3) 0; }
+</style>

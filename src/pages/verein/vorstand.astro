@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const vorstandEntries: CollectionEntry<'vorstand'>[] = await getCollection('vorstand');
+const vorstand = vorstandEntries.sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout title="Vorstand">
+  <section class="wrap">
+    <h1>Vorstand</h1>
+    <div class="grid">
+      {vorstand.map((member) => (
+        <div class="card">
+          <p class="role">{member.data.role}</p>
+          <h3>{member.data.name}</h3>
+        </div>
+      ))}
+    </div>
+    <p><a href="/verein">← Zurück zu Verein</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 900px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--wsc-space-3);
+    margin: var(--wsc-space-3) 0;
+  }
+  .role { text-transform: uppercase; letter-spacing: 0.05em; color: var(--wsc-muted); font-size: var(--wsc-step--1); margin: 0; }
+  .grid h3 { margin: 0.25rem 0 0; }
+</style>

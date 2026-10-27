@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-10-27T08:00:00+01:00",
+  "matches": [
+    {
+      "time": "10:00",
+      "home": "Junioren F-rot",
+      "away": "FC Küssnacht",
+      "field": "Black&White Arena",
+      "garderobeHeim": "6",
+      "garderobeGast": "8",
+      "status": null
+    },
+    {
+      "time": "11:30",
+      "home": "Junioren Ca",
+      "away": "SC Horw",
+      "field": "Black&White Arena",
+      "garderobeHeim": "4",
+      "garderobeGast": "8",
+      "status": null
+    },
+    {
+      "time": "13:00",
+      "home": "WSC II",
+      "away": "FC Buochs",
+      "field": "Black&White Arena",
+      "garderobeHeim": "2",
+      "garderobeGast": "8",
+      "status": null
+    },
+    {
+      "time": "14:30",
+      "home": "WSC I",
+      "away": "FC Stans",
+      "field": "Thermoplan Arena",
+      "garderobeHeim": "1",
+      "garderobeGast": "9",
+      "status": null
+    },
+    {
+      "time": "16:00",
+      "home": "Senioren 30+",
+      "away": "FC Vitznau",
+      "field": "Thermoplan Arena",
+      "garderobeHeim": "3",
+      "garderobeGast": "9",
+      "status": "verschoben"
+    }
+  ]
+}

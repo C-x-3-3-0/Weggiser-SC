@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const news: CollectionEntry<'news'>[] = await getCollection('news');
+  return news.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'news'>;
+}
+
+const { post } = Astro.props as Props;
+const { Content } = await render(post);
+---
+<BaseLayout title={post.data.title}>
+  <article class="wrap">
+    <time class="tabular">{post.data.date.toLocaleDateString('de-CH')}</time>
+    <h1>{post.data.title}</h1>
+    <div class="content">
+      <Content />
+    </div>
+    <p><a href="/aktuelles">← Zurück zu Aktuelles</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  article.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  time { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+  .content { margin: var(--wsc-space-3) 0; }
+</style>

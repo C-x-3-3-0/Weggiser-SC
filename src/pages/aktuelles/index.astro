@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const newsEntries: CollectionEntry<'news'>[] = await getCollection('news');
+const news = newsEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<BaseLayout title="Aktuelles">
+  <section class="wrap">
+    <h1>Aktuelles</h1>
+    <ul class="plain news-list">
+      {news.map((post) => (
+        <li class="card">
+          <time class="tabular">{post.data.date.toLocaleDateString('de-CH')}</time>
+          <h3><a href={`/aktuelles/${post.id}`}>{post.data.title}</a></h3>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); }
+  .news-list { display: grid; gap: var(--wsc-space-2); }
+  .news-list time { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+  .news-list h3 { margin: 0.25rem 0 0; }
+</style>

@@ -1,0 +1,75 @@
+---
+const nav = [
+  { label: 'Willkommen', href: '/' },
+  { label: 'Aktuelles', href: '/aktuelles' },
+  { label: 'Mannschaften', href: '/mannschaften' },
+  { label: 'Verein', href: '/verein' },
+  { label: 'Weiherstübli', href: '/weiherstuebli' },
+  { label: 'Arena', href: '/arena' },
+  { label: 'Archiv', href: '/archiv' },
+];
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a href="/" class="logo" aria-label="Weggiser Sportclub – Startseite">
+      <svg width="44" height="44" viewBox="0 0 44 44" role="img" aria-label="Weggiser Sportclub – Logo">
+        <rect width="44" height="44" rx="6" fill="var(--wsc-brand-primary)" />
+        <text x="22" y="28" text-anchor="middle" font-family="var(--wsc-font-display)" font-size="16" font-weight="700" fill="var(--wsc-brand-on-primary)">WSC</text>
+      </svg>
+      <span class="wordmark">Weggiser&nbsp;SC</span>
+    </a>
+    <nav aria-label="Hauptnavigation">
+      <ul>
+        {nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--wsc-brand-primary);
+    color: var(--wsc-brand-on-primary);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--wsc-space-3);
+    padding-top: var(--wsc-space-2);
+    padding-bottom: var(--wsc-space-2);
+    flex-wrap: wrap;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--wsc-space-1);
+    color: var(--wsc-brand-on-primary);
+    text-decoration: none;
+  }
+  .wordmark {
+    font-family: var(--wsc-font-display);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    font-size: var(--wsc-step-1);
+  }
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--wsc-space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    color: var(--wsc-brand-on-primary);
+    font-size: var(--wsc-step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+  }
+  nav a:hover { text-decoration: underline; }
+</style>

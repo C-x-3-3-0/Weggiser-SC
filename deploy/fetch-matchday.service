@@ -1,0 +1,7 @@
+[Unit]
+Description=Fetch WSC matchday fixtures (POC placeholder)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/srv/weggisersc
+ExecStart=/usr/bin/npx tsx scripts/fetch-matchday.ts

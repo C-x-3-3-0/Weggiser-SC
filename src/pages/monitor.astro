@@ -1,0 +1,193 @@
+---
+import MonitorLayout from '../layouts/MonitorLayout.astro';
+import matchdaySeed from '../../public/data/matchday.json';
+---
+<MonitorLayout title="Matchday – Weggiser Sportclub">
+  <div class="monitor">
+    <header class="monitor-header">
+      <div class="brand">
+        <svg width="90" height="90" viewBox="0 0 44 44" role="img" aria-label="Weggiser Sportclub – Logo">
+          <rect width="44" height="44" rx="6" fill="var(--wsc-brand-secondary)" />
+          <text x="22" y="28" text-anchor="middle" font-family="var(--wsc-font-display)" font-size="16" font-weight="700" fill="#fff">WSC</text>
+        </svg>
+      </div>
+      <div class="clock-block">
+        <div id="clock" class="clock tabular">--:--</div>
+        <div id="date" class="date">—</div>
+      </div>
+    </header>
+
+    <main class="rows" id="rows" data-seed={JSON.stringify(matchdaySeed.matches)}></main>
+
+    <footer class="stand">Stand: <span id="stand" class="tabular">{matchdaySeed.generatedAt}</span></footer>
+  </div>
+</MonitorLayout>
+
+<script>
+  interface Match {
+    time: string;
+    home: string;
+    away: string;
+    field: 'Thermoplan Arena' | 'Black&White Arena';
+    garderobeHeim: string;
+    garderobeGast: string;
+    status: 'live' | 'verschoben' | 'abgesagt' | null;
+  }
+
+  const PITCH_CLASS: Record<Match['field'], string> = {
+    'Thermoplan Arena': 'pill--natural',
+    'Black&White Arena': 'pill--artificial',
+  };
+  const STATUS_LABEL: Record<string, string> = {
+    live: 'LIVE',
+    verschoben: 'Verschoben',
+    abgesagt: 'Abgesagt',
+  };
+  const STATUS_CLASS: Record<string, string> = {
+    live: 'pill--success',
+    verschoben: 'pill--warning',
+    abgesagt: 'pill--danger',
+  };
+
+  function escapeHtml(value: string): string {
+    return value.replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c] ?? c));
+  }
+
+  function matchRowHtml(m: Match, highlighted: boolean): string {
+    const dimmed = m.status === 'abgesagt';
+    const statusPill = m.status
+      ? `<span class="pill ${STATUS_CLASS[m.status]}">${STATUS_LABEL[m.status]}</span>`
+      : '';
+    const hint = m.field === 'Black&White Arena'
+      ? '<span class="hint">Keine Stollenschuhe</span>'
+      : '';
+    return `
+      <div class="match-row ${highlighted ? 'match-row--highlighted' : ''} ${dimmed ? 'match-row--dimmed' : ''}">
+        <span class="time tabular">${escapeHtml(m.time)}</span>
+        <span class="teams">${escapeHtml(m.home)} <span class="vs">–</span> ${escapeHtml(m.away)}</span>
+        <span class="pill ${PITCH_CLASS[m.field]}">${escapeHtml(m.field)}</span>
+        <span class="rooms">Garderobe Heim ${escapeHtml(m.garderobeHeim)} · Gast ${escapeHtml(m.garderobeGast)}</span>
+        ${hint}
+        ${statusPill}
+      </div>`;
+  }
+
+  function render(matches: Match[], stand: string) {
+    const rows = document.getElementById('rows');
+    const standEl = document.getElementById('stand');
+    if (standEl) standEl.textContent = stand;
+    if (!rows) return;
+    if (matches.length === 0) {
+      rows.innerHTML = '<p class="empty">Heute keine Spiele</p>';
+      return;
+    }
+    rows.innerHTML = matches.map((m, i) => matchRowHtml(m, i === 0)).join('');
+  }
+
+  async function refresh() {
+    try {
+      const res = await fetch(`/data/matchday.json?_=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`status ${res.status}`);
+      const data = await res.json();
+      render(data.matches, data.generatedAt);
+    } catch {
+      // Keep showing the last good data on a fetch failure (never a blank
+      // or error screen) — the "Stand" timestamp already shows its age.
+    }
+  }
+
+  function updateClock() {
+    const now = new Date();
+    const clock = document.getElementById('clock');
+    const date = document.getElementById('date');
+    if (clock) {
+      clock.textContent = now.toLocaleTimeString('de-CH', {
+        hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Zurich',
+      });
+    }
+    if (date) {
+      date.textContent = now.toLocaleDateString('de-CH', {
+        weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Zurich',
+      });
+    }
+  }
+
+  const rowsEl = document.getElementById('rows');
+  const seedJson = rowsEl ? rowsEl.dataset.seed : undefined;
+  const seed: Match[] = seedJson ? JSON.parse(seedJson) : [];
+  render(seed, (document.getElementById('stand')?.textContent ?? '').trim());
+
+  updateClock();
+  setInterval(updateClock, 1000);
+  setInterval(refresh, 60_000);
+</script>
+
+<style>
+  .monitor {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 48px;
+  }
+  .monitor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .clock-block { text-align: right; }
+  .clock { font-size: 64px; font-weight: 700; font-family: var(--wsc-font-display); }
+  .date { font-size: 24px; color: var(--wsc-tv-muted); }
+  .rows {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 32px;
+    justify-content: center;
+  }
+  .rows :global(.match-row) {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: var(--wsc-tv-row);
+    border-left: 6px solid transparent;
+    border-radius: 8px;
+    padding: 16px 24px;
+    font-size: 28px;
+  }
+  .rows :global(.match-row--highlighted) { border-left-color: var(--wsc-brand-secondary); }
+  .rows :global(.match-row--dimmed) { opacity: 0.55; }
+  .rows :global(.time) { font-size: 40px; font-weight: 700; min-width: 3.5ch; }
+  .rows :global(.teams) { font-weight: 600; flex: 1 1 auto; }
+  .rows :global(.vs) { color: var(--wsc-tv-muted); }
+  .rows :global(.rooms) { font-size: 20px; color: var(--wsc-tv-muted); }
+  .rows :global(.hint) { font-size: 20px; font-weight: 700; color: var(--wsc-warning); }
+  .rows :global(.pill) {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 16px;
+    border-radius: 999px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .rows :global(.pill--natural) { background: var(--wsc-pitch-natural); }
+  .rows :global(.pill--artificial) { background: var(--wsc-pitch-artificial); }
+  .rows :global(.pill--success) { background: var(--wsc-success); }
+  .rows :global(.pill--warning) { background: var(--wsc-warning); }
+  .rows :global(.pill--danger) { background: var(--wsc-danger); }
+  .empty {
+    text-align: center;
+    font-size: 48px;
+    color: var(--wsc-tv-muted);
+  }
+  .stand {
+    text-align: right;
+    font-size: 18px;
+    color: var(--wsc-tv-muted);
+    margin-top: 24px;
+  }
+</style>

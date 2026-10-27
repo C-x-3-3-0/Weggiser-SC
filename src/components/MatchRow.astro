@@ -1,0 +1,63 @@
+---
+interface Props {
+  time: string;
+  home: string;
+  away: string;
+  field: 'Thermoplan Arena' | 'Black&White Arena';
+  garderobeHeim: string;
+  garderobeGast: string;
+  status?: 'live' | 'verschoben' | 'abgesagt' | null;
+  highlighted?: boolean;
+}
+
+const {
+  time,
+  home,
+  away,
+  field,
+  garderobeHeim,
+  garderobeGast,
+  status = null,
+  highlighted = false,
+} = Astro.props;
+
+const pitchClass = field === 'Thermoplan Arena' ? 'pill--natural' : 'pill--artificial';
+const statusLabel: Record<string, string> = {
+  live: 'LIVE',
+  verschoben: 'Verschoben',
+  abgesagt: 'Abgesagt',
+};
+const statusClass: Record<string, string> = {
+  live: 'pill--success',
+  verschoben: 'pill--warning',
+  abgesagt: 'pill--danger',
+};
+---
+<div class={`match-row ${highlighted ? 'match-row--highlighted' : ''} ${status === 'abgesagt' ? 'match-row--dimmed' : ''}`}>
+  <span class="time tabular">{time}</span>
+  <span class="teams">{home} <span class="vs">–</span> {away}</span>
+  <span class={`pill ${pitchClass}`}>{field}</span>
+  <span class="rooms">Garderobe Heim {garderobeHeim} · Gast {garderobeGast}</span>
+  {field === 'Black&White Arena' && <span class="hint">Keine Stollenschuhe</span>}
+  {status && <span class={`pill ${statusClass[status]}`}>{statusLabel[status]}</span>}
+</div>
+
+<style>
+  .match-row {
+    display: flex;
+    align-items: center;
+    gap: var(--wsc-space-3);
+    flex-wrap: wrap;
+    background: var(--wsc-tv-row, var(--wsc-surface));
+    border-left: 6px solid transparent;
+    border-radius: var(--wsc-radius);
+    padding: var(--wsc-space-2) var(--wsc-space-3);
+  }
+  .match-row--highlighted { border-left-color: var(--wsc-brand-secondary); }
+  .match-row--dimmed { opacity: 0.55; }
+  .time { font-weight: 700; font-size: var(--wsc-step-2); min-width: 4.5ch; }
+  .teams { font-weight: 600; font-size: var(--wsc-step-1); flex: 1 1 auto; }
+  .vs { color: var(--wsc-muted); }
+  .rooms { font-size: var(--wsc-step--1); color: var(--wsc-tv-muted, var(--wsc-muted)); }
+  .hint { font-size: var(--wsc-step--1); font-weight: 700; color: var(--wsc-warning); }
+</style>

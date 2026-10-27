@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const teams: CollectionEntry<'teams'>[] = await getCollection('teams');
+  return teams.map((team) => ({
+    params: { slug: team.id },
+    props: { team },
+  }));
+}
+
+interface Props {
+  team: CollectionEntry<'teams'>;
+}
+
+const { team } = Astro.props as Props;
+const { Content } = await render(team);
+---
+<BaseLayout title={team.data.name}>
+  <article class="wrap">
+    <p class="category">{team.data.category}</p>
+    <h1>{team.data.name}</h1>
+    {team.data.coaches.length > 0 && (
+      <p class="coaches">Trainer*innen: {team.data.coaches.join(', ')}</p>
+    )}
+    <div class="content">
+      <Content />
+    </div>
+    {team.data.ifvTeamId && (
+      <p>
+        <a
+          href={`https://matchcenter.ifv.ch/default.aspx?v=381&oid=7&lng=1&t=${team.data.ifvTeamId}&a=trr`}
+          rel="noopener"
+        >Spielplan &amp; Rangliste im IFV Matchcenter →</a>
+      </p>
+    )}
+    <p><a href="/mannschaften">← Zurück zu Mannschaften</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  article.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  .category { text-transform: uppercase; letter-spacing: 0.05em; color: var(--wsc-muted); font-size: var(--wsc-step--1); margin: 0; }
+  .coaches { color: var(--wsc-muted); }
+  .content { margin: var(--wsc-space-3) 0; }
+</style>

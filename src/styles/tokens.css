@@ -1,0 +1,58 @@
+/* Weggiser SC – design tokens
+   Source: wsc-brand skill. Brand values marked TODO are placeholders until
+   confirmed from the real logo (run scripts/extract_palette.py once the
+   logo file is available).
+*/
+:root {
+  /* Brand (from logo) — BEGIN BRAND */
+  --wsc-brand-primary: #1a1a1a;   /* TODO confirm from logo */
+  --wsc-brand-secondary: #c8102e; /* TODO confirm from logo */
+  --wsc-brand-on-primary: #ffffff;
+  /* END BRAND */
+
+  /* Neutrals */
+  --wsc-ink: #111111;
+  --wsc-paper: #ffffff;
+  --wsc-surface: #f4f4f2;
+  --wsc-muted: #5c5c5c;
+  --wsc-line: #e2e2de;
+
+  /* Fields */
+  --wsc-pitch-natural: #2e7d32;     /* Thermoplan Arena – Naturrasen */
+  --wsc-pitch-artificial: #1f6f8b;  /* Black&White Arena – Kunstrasen */
+
+  /* Status (never decorative) */
+  --wsc-success: #1b7f3a;  /* läuft / LIVE */
+  --wsc-warning: #b26a00;  /* verschoben */
+  --wsc-danger:  #b3261e;  /* abgesagt */
+
+  /* TV monitor */
+  --wsc-tv-bg: #0d0d0d;
+  --wsc-tv-row: #1c1c1c;
+  --wsc-tv-text: #ffffff;
+  --wsc-tv-muted: #b5b5b5;
+
+  /* Type */
+  --wsc-font-body: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --wsc-font-display: "Barlow Condensed", "Inter Variable", system-ui, sans-serif;
+  --wsc-step--1: 0.8rem;
+  --wsc-step-0: 1rem;
+  --wsc-step-1: 1.25rem;
+  --wsc-step-2: 1.563rem;
+  --wsc-step-3: 1.953rem;
+  --wsc-step-4: 2.441rem;
+  --wsc-step-5: 3.052rem;
+
+  /* Space & shape (8 px grid) */
+  --wsc-space-1: 0.5rem;
+  --wsc-space-2: 1rem;
+  --wsc-space-3: 1.5rem;
+  --wsc-space-4: 2rem;
+  --wsc-space-6: 3rem;
+  --wsc-space-8: 4rem;
+  --wsc-radius: 8px;
+  --wsc-radius-pill: 999px;
+  --wsc-max-width: 1200px;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }

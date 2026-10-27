@@ -1,0 +1,36 @@
+---
+interface Props {
+  name: string;
+  category: string;
+  coaches: string[];
+  slug: string;
+}
+
+const { name, category, coaches, slug } = Astro.props;
+---
+<a href={`/mannschaften/${slug}`} class="team-card card">
+  <p class="category">{category}</p>
+  <h3>{name}</h3>
+  {coaches.length > 0 && (
+    <p class="coaches">Trainer*innen: {coaches.join(', ')}</p>
+  )}
+</a>
+
+<style>
+  .team-card {
+    display: block;
+    text-decoration: none;
+    color: var(--wsc-ink);
+    border-left: 4px solid var(--wsc-brand-primary);
+  }
+  .team-card:hover { border-left-color: var(--wsc-brand-secondary); text-decoration: none; }
+  .category {
+    font-size: var(--wsc-step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--wsc-muted);
+    margin: 0 0 0.25rem;
+  }
+  .team-card h3 { margin: 0 0 0.5rem; font-size: var(--wsc-step-2); }
+  .coaches { margin: 0; font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+</style>

@@ -1,0 +1,78 @@
+---
+// Placeholder text logos for the POC — swap for real sponsor artwork
+// from src/assets (see wsc-brand skill, references/assets.md) before launch.
+const groups = [
+  {
+    label: 'Dress-Sponsoren',
+    sponsors: [
+      { name: 'Thermoplan', href: 'https://thermoplan.ch' },
+      { name: 'Catenazzi Bau', href: 'https://catenazzi-bau.ch' },
+      { name: 'Rodaro', href: 'https://rodaro.ch' },
+    ],
+  },
+  {
+    label: 'Ausrüster',
+    sponsors: [
+      { name: 'Rigi Sport', href: 'https://rigi-sport.ch' },
+      { name: 'Füchsli Shop', href: 'https://fuechsli-shop.ch/wsc-shop' },
+    ],
+  },
+  {
+    label: 'Partner',
+    sponsors: [
+      { name: 'Gemeinde Weggis', href: 'https://gemeinde-weggis.ch' },
+      { name: 'Swisslos Sportfonds Luzern', href: 'https://sport.lu.ch/swisslos' },
+      { name: 'Schätzle', href: null },
+      { name: 'AVIA', href: null },
+    ],
+  },
+];
+---
+<div class="sponsor-strip">
+  {groups.map((group) => (
+    <div class="sponsor-group">
+      <p class="sponsor-label">{group.label}</p>
+      <ul class="plain sponsor-list">
+        {group.sponsors.map((s) => (
+          <li>
+            {s.href ? (
+              <a href={s.href} rel="noopener sponsored" class="sponsor-logo">{s.name}</a>
+            ) : (
+              <span class="sponsor-logo">{s.name}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+  <p class="sponsor-note"><a href="/bandenwerber">Bandenwerber →</a></p>
+</div>
+
+<style>
+  .sponsor-strip { margin-bottom: var(--wsc-space-4); }
+  .sponsor-group { margin-bottom: var(--wsc-space-2); }
+  .sponsor-label {
+    font-size: var(--wsc-step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--wsc-muted);
+    margin: 0 0 0.5rem;
+  }
+  .sponsor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--wsc-space-2);
+  }
+  .sponsor-logo {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background: var(--wsc-paper);
+    border: 1px solid var(--wsc-line);
+    border-radius: var(--wsc-radius);
+    color: var(--wsc-ink);
+    font-size: var(--wsc-step--1);
+    font-weight: 600;
+  }
+  a.sponsor-logo:hover { color: var(--wsc-brand-secondary); border-color: var(--wsc-brand-secondary); text-decoration: none; }
+  .sponsor-note { font-size: var(--wsc-step--1); }
+</style>
