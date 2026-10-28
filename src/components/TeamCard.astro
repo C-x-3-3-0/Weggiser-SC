@@ -1,19 +1,18 @@
 ---
+import TeamPhotoPlaceholder from './TeamPhotoPlaceholder.astro';
+
 interface Props {
   name: string;
   category: string;
-  coaches: string[];
   slug: string;
 }
 
-const { name, category, coaches, slug } = Astro.props;
+const { name, category, slug } = Astro.props;
 ---
 <a href={`/mannschaften/${slug}`} class="team-card card">
+  <TeamPhotoPlaceholder label={name} compact />
   <p class="category">{category}</p>
   <h3>{name}</h3>
-  {coaches.length > 0 && (
-    <p class="coaches">Trainer*innen: {coaches.join(', ')}</p>
-  )}
 </a>
 
 <style>
@@ -21,16 +20,27 @@ const { name, category, coaches, slug } = Astro.props;
     display: block;
     text-decoration: none;
     color: var(--wsc-ink);
+    padding: 0;
+    overflow: hidden;
     border-left: 4px solid var(--wsc-brand-primary);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .team-card:hover { border-left-color: var(--wsc-brand-secondary); text-decoration: none; }
+  .team-card:hover {
+    border-left-color: var(--wsc-brand-secondary);
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  }
+  .team-card :global(.team-photo-placeholder) {
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid var(--wsc-line);
+  }
   .category {
     font-size: var(--wsc-step--1);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--wsc-muted);
-    margin: 0 0 0.25rem;
+    margin: var(--wsc-space-2) var(--wsc-space-3) 0.25rem;
   }
-  .team-card h3 { margin: 0 0 0.5rem; font-size: var(--wsc-step-2); }
-  .coaches { margin: 0; font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+  .team-card h3 { margin: 0 var(--wsc-space-3) var(--wsc-space-3); font-size: var(--wsc-step-2); }
 </style>

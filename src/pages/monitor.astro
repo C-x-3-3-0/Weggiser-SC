@@ -16,7 +16,7 @@ import matchdaySeed from '../../public/data/matchday.json';
       </div>
     </header>
 
-    <main class="rows" id="rows" data-seed={JSON.stringify(matchdaySeed.matches)}></main>
+    <main class="content" id="content" data-seed={JSON.stringify(matchdaySeed.matches)}></main>
 
     <footer class="stand">Stand: <span id="stand" class="tabular">{matchdaySeed.generatedAt}</span></footer>
   </div>
@@ -32,6 +32,12 @@ import matchdaySeed from '../../public/data/matchday.json';
     garderobeGast: string;
     status: 'live' | 'verschoben' | 'abgesagt' | null;
   }
+
+  // A match is the "main" match from 60 min before to 90 min after kickoff.
+  // Overlapping windows (the next match starts within the current one's
+  // window) are shown side by side instead of replacing each other.
+  const WINDOW_BEFORE_MS = 60 * 60_000;
+  const WINDOW_AFTER_MS = 90 * 60_000;
 
   const PITCH_CLASS: Record<Match['field'], string> = {
     'Thermoplan Arena': 'pill--natural',
@@ -54,35 +60,109 @@ import matchdaySeed from '../../public/data/matchday.json';
     }[c] ?? c));
   }
 
-  function matchRowHtml(m: Match, highlighted: boolean): string {
-    const dimmed = m.status === 'abgesagt';
-    const statusPill = m.status
-      ? `<span class="pill ${STATUS_CLASS[m.status]}">${STATUS_LABEL[m.status]}</span>`
-      : '';
+  function kickoffOn(time: string, base: Date): Date {
+    const [h, m] = time.split(':').map(Number);
+    const d = new Date(base);
+    d.setHours(h, m, 0, 0);
+    return d;
+  }
+
+  function classify(matches: Match[], now: Date) {
+    const withWindow = matches
+      .map((m) => {
+        const kickoff = kickoffOn(m.time, now);
+        return {
+          m,
+          kickoff,
+          start: new Date(kickoff.getTime() - WINDOW_BEFORE_MS),
+          end: new Date(kickoff.getTime() + WINDOW_AFTER_MS),
+        };
+      })
+      .sort((a, b) => a.kickoff.getTime() - b.kickoff.getTime());
+
+    const main = withWindow.filter((x) => now >= x.start && now <= x.end);
+    const mainTimes = new Set(main.map((x) => x.m.time));
+    const upcoming = withWindow.filter((x) => !mainTimes.has(x.m.time) && now < x.start);
+    const over = withWindow.filter((x) => !mainTimes.has(x.m.time) && now >= x.end);
+
+    return { main: main.map((x) => x.m), upcoming: upcoming.map((x) => x.m), over };
+  }
+
+  function pillHtml(m: Match): string {
     const hint = m.field === 'Black&White Arena'
       ? '<span class="hint">Keine Stollenschuhe</span>'
       : '';
+    const statusPill = m.status
+      ? `<span class="pill ${STATUS_CLASS[m.status]}">${STATUS_LABEL[m.status]}</span>`
+      : '';
+    return `<span class="pill ${PITCH_CLASS[m.field]}">${escapeHtml(m.field)}</span>${hint}${statusPill}`;
+  }
+
+  function mainCardHtml(m: Match): string {
+    const dimmed = m.status === 'abgesagt';
     return `
-      <div class="match-row ${highlighted ? 'match-row--highlighted' : ''} ${dimmed ? 'match-row--dimmed' : ''}">
+      <div class="main-card ${dimmed ? 'is-dimmed' : ''}">
+        <span class="live-tag">${m.status === 'live' ? 'LIVE' : 'Jetzt im Gange'}</span>
         <span class="time tabular">${escapeHtml(m.time)}</span>
         <span class="teams">${escapeHtml(m.home)} <span class="vs">–</span> ${escapeHtml(m.away)}</span>
-        <span class="pill ${PITCH_CLASS[m.field]}">${escapeHtml(m.field)}</span>
+        <span class="meta">${pillHtml(m)}</span>
         <span class="rooms">Garderobe Heim ${escapeHtml(m.garderobeHeim)} · Gast ${escapeHtml(m.garderobeGast)}</span>
-        ${hint}
-        ${statusPill}
+      </div>`;
+  }
+
+  function upcomingRowHtml(m: Match): string {
+    const dimmed = m.status === 'abgesagt';
+    return `
+      <div class="match-row ${dimmed ? 'match-row--dimmed' : ''}">
+        <span class="time tabular">${escapeHtml(m.time)}</span>
+        <span class="teams">${escapeHtml(m.home)} <span class="vs">–</span> ${escapeHtml(m.away)}</span>
+        <span class="rooms">Garderobe Heim ${escapeHtml(m.garderobeHeim)} · Gast ${escapeHtml(m.garderobeGast)}</span>
+        ${pillHtml(m)}
       </div>`;
   }
 
   function render(matches: Match[], stand: string) {
-    const rows = document.getElementById('rows');
     const standEl = document.getElementById('stand');
+    const content = document.getElementById('content');
     if (standEl) standEl.textContent = stand;
-    if (!rows) return;
+    if (!content) return;
+
     if (matches.length === 0) {
-      rows.innerHTML = '<p class="empty">Heute keine Spiele</p>';
+      content.innerHTML = '<p class="empty">Heute keine Spiele</p>';
       return;
     }
-    rows.innerHTML = matches.map((m, i) => matchRowHtml(m, i === 0)).join('');
+
+    const now = new Date();
+    const { main, upcoming, over } = classify(matches, now);
+
+    if (main.length === 0 && upcoming.length === 0) {
+      content.innerHTML = over.length > 0
+        ? '<p class="empty">Keine weiteren Spiele heute</p>'
+        : '<p class="empty">Heute keine Spiele</p>';
+      return;
+    }
+
+    const mainSection = main.length > 0
+      ? `<section class="main-section">
+          <h2 class="section-title">${main.length > 1 ? 'Jetzt im Gange' : 'Jetzt im Gange'}</h2>
+          <div class="main-grid main-grid--${Math.min(main.length, 3)}">${main.map(mainCardHtml).join('')}</div>
+        </section>`
+      : upcoming.length > 0
+        ? `<section class="main-section main-section--next">
+            <h2 class="section-title">Nächstes Spiel</h2>
+            <div class="main-grid main-grid--1">${mainCardHtml(upcoming[0])}</div>
+          </section>`
+        : '';
+
+    const upcomingList = main.length > 0 ? upcoming : upcoming.slice(1);
+    const upcomingSection = upcomingList.length > 0
+      ? `<section class="upcoming-section">
+          <h2 class="section-title section-title--sub">Nächste Spiele</h2>
+          <div class="upcoming-rows">${upcomingList.map(upcomingRowHtml).join('')}</div>
+        </section>`
+      : '';
+
+    content.innerHTML = mainSection + upcomingSection;
   }
 
   async function refresh() {
@@ -113,13 +193,16 @@ import matchdaySeed from '../../public/data/matchday.json';
     }
   }
 
-  const rowsEl = document.getElementById('rows');
-  const seedJson = rowsEl ? rowsEl.dataset.seed : undefined;
+  const contentEl = document.getElementById('content');
+  const seedJson = contentEl ? contentEl.dataset.seed : undefined;
   const seed: Match[] = seedJson ? JSON.parse(seedJson) : [];
   render(seed, (document.getElementById('stand')?.textContent ?? '').trim());
 
   updateClock();
   setInterval(updateClock, 1000);
+  // Re-render on a shorter interval too, so a match crosses into/out of its
+  // 90-minute window without waiting for the next data refresh.
+  setInterval(() => render(seed, (document.getElementById('stand')?.textContent ?? '').trim()), 30_000);
   setInterval(refresh, 60_000);
 </script>
 
@@ -129,6 +212,12 @@ import matchdaySeed from '../../public/data/matchday.json';
     flex-direction: column;
     height: 100vh;
     padding: 48px;
+    position: relative;
+    background:
+      radial-gradient(circle at 12% -10%, rgba(217, 12, 32, 0.28), transparent 55%),
+      radial-gradient(circle at 100% 115%, rgba(217, 12, 32, 0.16), transparent 50%),
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 60px),
+      linear-gradient(180deg, #141414 0%, #0a0a0a 100%);
   }
   .monitor-header {
     display: flex;
@@ -141,6 +230,7 @@ import matchdaySeed from '../../public/data/matchday.json';
     padding: 12px 20px;
     display: flex;
     align-items: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   }
   .brand :global(img) {
     display: block;
@@ -150,15 +240,69 @@ import matchdaySeed from '../../public/data/matchday.json';
   .clock-block { text-align: right; }
   .clock { font-size: 64px; font-weight: 700; font-family: var(--wsc-font-display); }
   .date { font-size: 24px; color: var(--wsc-tv-muted); }
-  .rows {
+
+  .content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 32px;
     margin-top: 32px;
-    justify-content: center;
+    justify-content: flex-start;
+    min-height: 0;
+    overflow: hidden;
   }
-  .rows :global(.match-row) {
+
+  /* Everything below targets markup injected client-side via innerHTML, so
+     it must be :global() — Astro's scoping attribute is only applied to
+     elements present in this component's own template at build time. */
+  :global(.section-title) {
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 16px;
+    color: var(--wsc-brand-primary);
+  }
+  :global(.section-title--sub) { color: var(--wsc-tv-muted); font-size: 22px; }
+
+  :global(.main-grid) {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+  }
+  :global(.main-grid--2) { grid-template-columns: repeat(2, 1fr); }
+  :global(.main-grid--3) { grid-template-columns: repeat(3, 1fr); }
+
+  :global(.main-card) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(217, 12, 32, 0.22), var(--wsc-tv-row));
+    border: 2px solid var(--wsc-brand-primary);
+    border-radius: 16px;
+    padding: 28px 32px;
+    box-shadow: 0 10px 30px rgba(217, 12, 32, 0.15);
+  }
+  :global(.main-card.is-dimmed) { opacity: 0.55; }
+  :global(.live-tag) {
+    align-self: flex-start;
+    background: var(--wsc-brand-primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 4px 14px;
+    border-radius: 999px;
+  }
+  :global(.main-card .time) { font-size: 48px; font-weight: 700; }
+  :global(.main-card .teams) { font-size: 36px; font-weight: 700; }
+  :global(.main-card .vs) { color: var(--wsc-tv-muted); }
+  :global(.main-card .meta) { display: flex; gap: 12px; flex-wrap: wrap; }
+  :global(.main-card .rooms) { font-size: 20px; color: var(--wsc-tv-muted); }
+
+  :global(.upcoming-rows) { display: flex; flex-direction: column; gap: 14px; }
+  :global(.upcoming-rows .match-row) {
     display: flex;
     align-items: center;
     gap: 24px;
@@ -166,31 +310,33 @@ import matchdaySeed from '../../public/data/matchday.json';
     background: var(--wsc-tv-row);
     border-left: 6px solid transparent;
     border-radius: 8px;
-    padding: 16px 24px;
-    font-size: 28px;
+    padding: 14px 24px;
+    font-size: 24px;
   }
-  .rows :global(.match-row--highlighted) { border-left-color: var(--wsc-brand-secondary); }
-  .rows :global(.match-row--dimmed) { opacity: 0.55; }
-  .rows :global(.time) { font-size: 40px; font-weight: 700; min-width: 3.5ch; }
-  .rows :global(.teams) { font-weight: 600; flex: 1 1 auto; }
-  .rows :global(.vs) { color: var(--wsc-tv-muted); }
-  .rows :global(.rooms) { font-size: 20px; color: var(--wsc-tv-muted); }
-  .rows :global(.hint) { font-size: 20px; font-weight: 700; color: var(--wsc-warning); }
-  .rows :global(.pill) {
+  :global(.upcoming-rows .match-row--dimmed) { opacity: 0.5; }
+  :global(.upcoming-rows .time) { font-size: 32px; font-weight: 700; min-width: 3.5ch; }
+  :global(.upcoming-rows .teams) { font-weight: 600; flex: 1 1 auto; }
+  :global(.upcoming-rows .vs) { color: var(--wsc-tv-muted); }
+  :global(.upcoming-rows .rooms) { font-size: 18px; color: var(--wsc-tv-muted); }
+  :global(.upcoming-rows .hint) { font-size: 16px; font-weight: 700; color: var(--wsc-warning); }
+
+  :global(.pill) {
     display: inline-flex;
     align-items: center;
     padding: 4px 16px;
     border-radius: 999px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #fff;
   }
-  .rows :global(.pill--natural) { background: var(--wsc-pitch-natural); }
-  .rows :global(.pill--artificial) { background: var(--wsc-pitch-artificial); }
-  .rows :global(.pill--success) { background: var(--wsc-success); }
-  .rows :global(.pill--warning) { background: var(--wsc-warning); }
-  .rows :global(.pill--danger) { background: var(--wsc-danger); }
-  .empty {
+  :global(.pill--natural) { background: var(--wsc-pitch-natural); }
+  :global(.pill--artificial) { background: var(--wsc-pitch-artificial); }
+  :global(.pill--success) { background: var(--wsc-success); }
+  :global(.pill--warning) { background: var(--wsc-warning); }
+  :global(.pill--danger) { background: var(--wsc-danger); }
+
+  :global(.empty) {
+    margin: auto;
     text-align: center;
     font-size: 48px;
     color: var(--wsc-tv-muted);

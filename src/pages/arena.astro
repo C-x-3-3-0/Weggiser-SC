@@ -9,68 +9,103 @@ import matchday from '../../public/data/matchday.json';
 const todaysMatches = matchday.matches;
 ---
 <BaseLayout title="Arena">
-  <section class="wrap">
+  <section class="wrap intro">
+    <p class="eyebrow">Weggiser Sportclub</p>
     <h1>Arena</h1>
+    <p class="lead">Unsere beiden Spielfelder – Hauptfeld und Allwetterplatz – rund ums Clubhaus Weiherstübli.</p>
+  </section>
+
+  <section class="wrap">
     <div class="grid">
       <div class="card arena-card">
         <Image src={thermoplanPhoto} alt="Thermoplan Arena" width={480} height={320} class="arena-photo" />
-        <span class="pill pill--natural">Naturrasen</span>
-        <h3>Thermoplan Arena</h3>
-        <p>Hauptfeld, 105 × 68 m. 1.-Liga-Lizenz, 200 Sitzplätze / 1050 Stehplätze.</p>
+        <div class="arena-body">
+          <span class="pill pill--natural">Naturrasen</span>
+          <h3>Thermoplan Arena</h3>
+          <p>Hauptfeld, 105 × 68 m. 1.-Liga-Lizenz, 200 Sitzplätze / 1050 Stehplätze.</p>
+        </div>
       </div>
       <div class="card arena-card">
         <Image src={blackWhitePhoto} alt="Black&White Arena" width={480} height={320} class="arena-photo" />
-        <span class="pill pill--artificial">Kunstrasen</span>
-        <h3>Black&amp;White Arena</h3>
-        <p>Allwetterplatz, 100 × 64 m. 2.-Liga-interregional-Lizenz. Keine Stollenschuhe.</p>
+        <div class="arena-body">
+          <span class="pill pill--artificial">Kunstrasen</span>
+          <h3>Black&amp;White Arena</h3>
+          <p>Allwetterplatz, 100 × 64 m. 2.-Liga-interregional-Lizenz. Keine Stollenschuhe.</p>
+        </div>
       </div>
     </div>
-    <p><a href="/bandenwerber">Bandenwerbung auf der Arena →</a></p>
-
-    {todaysMatches.length > 0 && (
-      <div class="today">
-        <h2>Heute auf der Arena</h2>
-        <div class="today-rows">
-          {todaysMatches.map((m) => (
-            <MatchRow
-              time={m.time}
-              home={m.home}
-              away={m.away}
-              field={m.field as 'Thermoplan Arena' | 'Black&White Arena'}
-              garderobeHeim={m.garderobeHeim}
-              garderobeGast={m.garderobeGast}
-              status={m.status as 'live' | 'verschoben' | 'abgesagt' | null}
-            />
-          ))}
-        </div>
-        <p class="tv-hint">Volle Übersicht inkl. Garderoben: <a href="/monitor">Matchday-Monitor →</a></p>
-      </div>
-    )}
+    <p class="bande-link"><a href="/bandenwerber">Bandenwerbung auf der Arena →</a></p>
   </section>
+
+  {todaysMatches.length > 0 && (
+    <section class="wrap today">
+      <div class="today-head">
+        <h2>Heute auf der Arena</h2>
+        <a href="/monitor">Matchday-Monitor →</a>
+      </div>
+      <div class="today-rows">
+        {todaysMatches.map((m) => (
+          <MatchRow
+            time={m.time}
+            home={m.home}
+            away={m.away}
+            field={m.field as 'Thermoplan Arena' | 'Black&White Arena'}
+            garderobeHeim={m.garderobeHeim}
+            garderobeGast={m.garderobeGast}
+            status={m.status as 'live' | 'verschoben' | 'abgesagt' | null}
+          />
+        ))}
+      </div>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
-  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); }
+  .wrap { padding: var(--wsc-space-5) var(--wsc-space-3); }
+  .intro { padding-bottom: 0; }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wsc-brand-primary);
+    font-weight: 700;
+    font-size: var(--wsc-step--1);
+    margin: 0;
+  }
+  .lead { color: var(--wsc-muted); max-width: 600px; }
+
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--wsc-space-3);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--wsc-space-5);
     margin: var(--wsc-space-3) 0;
   }
-  .grid h3 { margin: var(--wsc-space-1) 0; }
-  .arena-card { padding: 0; overflow: hidden; }
+  .arena-card {
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .arena-card:hover { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
   .arena-card :global(.arena-photo) {
     display: block;
     width: 100%;
-    height: 180px;
+    height: 200px;
     object-fit: cover;
   }
-  .arena-card .pill,
-  .arena-card h3,
-  .arena-card p { margin-left: var(--wsc-space-3); margin-right: var(--wsc-space-3); }
-  .arena-card .pill { margin-top: var(--wsc-space-3); }
-  .arena-card p { margin-bottom: var(--wsc-space-3); }
-  .today { margin-top: var(--wsc-space-6); }
-  .today-rows { display: grid; gap: var(--wsc-space-2); margin: var(--wsc-space-3) 0; }
-  .tv-hint { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
+  .arena-body { padding: var(--wsc-space-3) var(--wsc-space-3) var(--wsc-space-4); }
+  .arena-body h3 { margin: var(--wsc-space-1) 0 0.4rem; }
+  .arena-body p { margin: 0; color: var(--wsc-muted); }
+  .bande-link { font-weight: 600; }
+
+  .today { padding-top: var(--wsc-space-6); border-top: 1px solid var(--wsc-line); margin-top: var(--wsc-space-4); }
+  .today-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--wsc-space-2);
+    flex-wrap: wrap;
+  }
+  .today-head h2 { margin: 0; }
+  .today-head a { font-weight: 600; white-space: nowrap; }
+  .today-rows { display: grid; gap: var(--wsc-space-2); margin-top: var(--wsc-space-3); }
 </style>

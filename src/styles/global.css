@@ -5,6 +5,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 body {
@@ -13,6 +14,13 @@ body {
   color: var(--wsc-ink);
   background: var(--wsc-paper);
   line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 h1, h2, h3, h4 {
@@ -23,12 +31,17 @@ h1, h2, h3, h4 {
   margin: 0 0 var(--wsc-space-2);
 }
 
-h1 { font-size: var(--wsc-step-5); }
-h2 { font-size: var(--wsc-step-4); }
-h3 { font-size: var(--wsc-step-2); }
+h1 { font-size: var(--wsc-step-5); overflow-wrap: break-word; }
+h2 { font-size: var(--wsc-step-4); overflow-wrap: break-word; }
+h3 { font-size: var(--wsc-step-2); overflow-wrap: break-word; }
+
+@media (max-width: 480px) {
+  h1 { font-size: var(--wsc-step-4); }
+  h2 { font-size: var(--wsc-step-3); }
+}
 
 a {
-  color: var(--wsc-brand-secondary);
+  color: var(--wsc-brand-primary);
   text-decoration: none;
 }
 a:hover { text-decoration: underline; }

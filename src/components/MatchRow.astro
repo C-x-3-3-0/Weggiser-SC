@@ -48,16 +48,17 @@ const statusClass: Record<string, string> = {
     align-items: center;
     gap: var(--wsc-space-3);
     flex-wrap: wrap;
-    background: var(--wsc-tv-row, var(--wsc-surface));
-    border-left: 6px solid transparent;
+    background: var(--wsc-paper);
+    border: 1px solid var(--wsc-line);
+    border-left: 6px solid var(--wsc-brand-secondary);
     border-radius: var(--wsc-radius);
     padding: var(--wsc-space-2) var(--wsc-space-3);
   }
-  .match-row--highlighted { border-left-color: var(--wsc-brand-secondary); }
+  .match-row--highlighted { border-left-color: var(--wsc-brand-primary); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07); }
   .match-row--dimmed { opacity: 0.55; }
   .time { font-weight: 700; font-size: var(--wsc-step-2); min-width: 4.5ch; }
   .teams { font-weight: 600; font-size: var(--wsc-step-1); flex: 1 1 auto; }
   .vs { color: var(--wsc-muted); }
-  .rooms { font-size: var(--wsc-step--1); color: var(--wsc-tv-muted, var(--wsc-muted)); }
+  .rooms { font-size: var(--wsc-step--1); color: var(--wsc-muted); }
   .hint { font-size: var(--wsc-step--1); font-weight: 700; color: var(--wsc-warning); }
 </style>

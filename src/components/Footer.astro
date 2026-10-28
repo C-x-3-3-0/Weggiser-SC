@@ -2,71 +2,159 @@
 import SponsorStrip from './SponsorStrip.astro';
 
 const year = new Date().getFullYear();
+
+const socials = [
+  { label: 'Weggiser Sportclub', handle: '@weggiser_sportclub', href: 'https://instagram.com/weggiser_sportclub', icon: 'instagram' },
+  { label: 'WSC I', handle: '@weggisersc', href: 'https://instagram.com/weggisersc', icon: 'instagram' },
+  { label: 'WSC II', handle: '@wsc2official', href: 'https://instagram.com/wsc2official', icon: 'instagram' },
+  { label: 'Mädchen FF-17', handle: '@wsc_ff_17', href: 'https://instagram.com/wsc_ff_17', icon: 'instagram' },
+  { label: 'Facebook', handle: 'Weggiser Sportclub', href: 'https://facebook.com', icon: 'facebook' },
+];
 ---
 <footer class="site-footer">
-  <div class="wrap">
-    <SponsorStrip />
-
-    <div class="footer-grid">
-      <div>
-        <h3>Weggiser Sportclub</h3>
-        <p>Thermoplan-Platz 3<br />6353 Weggis</p>
-        <p><a href="mailto:info@weggisersc.ch">info@weggisersc.ch</a></p>
-      </div>
-      <div>
-        <h3>Spielbetrieb</h3>
-        <ul class="plain">
-          <li><a href="https://matchcenter.ifv.ch/default.aspx?v=381&oid=7&lng=1&a=as" rel="noopener">Spielbetrieb</a></li>
-          <li><a href="https://matchcenter.ifv.ch/default.aspx?v=381&oid=7&lng=1&a=rr" rel="noopener">Ranglisten</a></li>
-          <li><a href="/aktuelles/team-news">Team News</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Social</h3>
-        <ul class="plain">
-          <li><a href="https://instagram.com/weggiser_sportclub" rel="noopener">Instagram</a></li>
-          <li><a href="https://facebook.com" rel="noopener">Facebook</a></li>
-        </ul>
-      </div>
+  <div class="sponsor-panel">
+    <div class="wrap">
+      <SponsorStrip />
     </div>
+  </div>
 
-    <div class="legal">
-      <span>&copy; {year} Weggiser Sportclub</span>
-      <a href="/impressum">Impressum</a>
-      <span aria-hidden="true">|</span>
-      <a href="/datenschutz">Datenschutz</a>
+  <div class="footer-main">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand">
+          <h3>Weggiser Sportclub</h3>
+          <p class="tagline">der Fussballclub der Seegemeinden</p>
+          <p>Thermoplan-Platz 3<br />6353 Weggis</p>
+          <p><a href="mailto:info@weggisersc.ch">info@weggisersc.ch</a></p>
+        </div>
+        <div class="footer-col">
+          <h3>Spielbetrieb</h3>
+          <ul class="plain">
+            <li><a href="https://matchcenter.ifv.ch/default.aspx?v=381&oid=7&lng=1&a=as" rel="noopener">Spielbetrieb</a></li>
+            <li><a href="https://matchcenter.ifv.ch/default.aspx?v=381&oid=7&lng=1&a=rr" rel="noopener">Ranglisten</a></li>
+            <li><a href="/aktuelles">Team News</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-social">
+          <h3>Social</h3>
+          <ul class="plain social-list">
+            {socials.map((s) => (
+              <li>
+                <a href={s.href} rel="noopener" class="social-link">
+                  <span class="social-icon" aria-hidden="true">
+                    {s.icon === 'instagram' ? (
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2.5" y="2.5" width="19" height="19" rx="5" stroke="currentColor" stroke-width="1.8" />
+                        <circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.8" />
+                        <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" />
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5h2.7l.5-3.5h-3.2V7.8c0-1 .3-1.7 1.7-1.7H14.5V3Z" fill="currentColor" />
+                      </svg>
+                    )}
+                  </span>
+                  <span class="social-text">
+                    <span class="social-label">{s.label}</span>
+                    <span class="social-handle">{s.handle}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div class="legal">
+        <span>&copy; {year} Weggiser Sportclub</span>
+        <a href="/impressum">Impressum</a>
+        <span aria-hidden="true">|</span>
+        <a href="/datenschutz">Datenschutz</a>
+      </div>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    background: var(--wsc-surface);
-    border-top: 1px solid var(--wsc-line);
     margin-top: var(--wsc-space-8);
+    flex-shrink: 0;
+  }
+  .sponsor-panel {
+    background: var(--wsc-paper);
+    border-top: 1px solid var(--wsc-line);
+    padding: var(--wsc-space-6) 0 var(--wsc-space-2);
+  }
+  .footer-main {
+    background: var(--wsc-brand-secondary);
+    color: #ffffff;
+    border-top: 3px solid var(--wsc-brand-primary);
     padding: var(--wsc-space-6) 0 var(--wsc-space-4);
   }
   .footer-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1.3fr 1fr 1.3fr;
     gap: var(--wsc-space-4);
-    margin: var(--wsc-space-4) 0;
   }
-  .plain {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  @media (max-width: 760px) {
+    .footer-grid { grid-template-columns: 1fr; }
   }
-  .plain li { margin-bottom: var(--wsc-space-1); }
+  .footer-col h3 {
+    color: #ffffff;
+    font-size: var(--wsc-step-0);
+    letter-spacing: 0.04em;
+    margin-bottom: var(--wsc-space-2);
+  }
+  .footer-col p { margin: 0 0 0.5em; color: #d8d8d6; }
+  .footer-brand .tagline {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: var(--wsc-step--1);
+    color: var(--wsc-brand-primary);
+    font-weight: 700;
+  }
+  .footer-col a { color: #ffffff; }
+  .footer-col a:hover { color: var(--wsc-brand-primary); }
+  .plain { list-style: none; margin: 0; padding: 0; }
+  .plain li { margin-bottom: 0.5rem; }
+
+  .social-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+  }
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: var(--wsc-radius-pill);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    transition: background 0.15s, color 0.15s;
+  }
+  .social-icon svg { width: 18px; height: 18px; }
+  .social-link:hover .social-icon { background: var(--wsc-brand-primary); color: #ffffff; }
+  .social-text { display: flex; flex-direction: column; line-height: 1.2; }
+  .social-label { font-size: var(--wsc-step--1); font-weight: 600; color: #ffffff; }
+  .social-handle { font-size: 0.75rem; color: #a9a9a7; }
+  .social-link:hover .social-label { color: var(--wsc-brand-primary); }
+
   .legal {
     display: flex;
     gap: var(--wsc-space-2);
     align-items: center;
     flex-wrap: wrap;
-    color: var(--wsc-muted);
+    color: #a9a9a7;
     font-size: var(--wsc-step--1);
-    border-top: 1px solid var(--wsc-line);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin-top: var(--wsc-space-4);
     padding-top: var(--wsc-space-3);
   }
-  .legal a { color: var(--wsc-muted); }
+  .legal a { color: #a9a9a7; }
+  .legal a:hover { color: var(--wsc-brand-primary); }
 </style>

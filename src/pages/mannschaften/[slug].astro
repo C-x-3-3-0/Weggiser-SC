@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import TeamPhotoPlaceholder from '../../components/TeamPhotoPlaceholder.astro';
+import PersonCard from '../../components/PersonCard.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -16,17 +18,22 @@ interface Props {
 
 const { team } = Astro.props as Props;
 const { Content } = await render(team);
+const { coaches, players, photoCaption } = team.data;
 ---
 <BaseLayout title={team.data.name}>
   <article class="wrap">
     <p class="category">{team.data.category}</p>
     <h1>{team.data.name}</h1>
-    {team.data.coaches.length > 0 && (
-      <p class="coaches">Trainer*innen: {team.data.coaches.join(', ')}</p>
-    )}
+
+    <figure class="team-photo">
+      <TeamPhotoPlaceholder label={team.data.name} />
+      <figcaption>{photoCaption ?? 'Teamfoto folgt – Bildbeschreibung wird ergänzt, sobald das Foto vorliegt.'}</figcaption>
+    </figure>
+
     <div class="content">
       <Content />
     </div>
+
     {team.data.ifvTeamId && (
       <p>
         <a
@@ -35,13 +42,48 @@ const { Content } = await render(team);
         >Spielplan &amp; Rangliste im IFV Matchcenter →</a>
       </p>
     )}
+
+    {coaches.length > 0 && (
+      <section class="roster">
+        <h2>Trainer*innen</h2>
+        <div class="roster-grid">
+          {coaches.map((name: string) => <PersonCard name={name} role="Trainer*in" />)}
+        </div>
+      </section>
+    )}
+
+    {players.length > 0 && (
+      <section class="roster">
+        <h2>Spieler*innen</h2>
+        <div class="roster-grid">
+          {players.map((name: string) => <PersonCard name={name} role="Spieler*in" />)}
+        </div>
+      </section>
+    )}
+
     <p><a href="/mannschaften">← Zurück zu Mannschaften</a></p>
   </article>
 </BaseLayout>
 
 <style>
-  article.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  article.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 900px; }
   .category { text-transform: uppercase; letter-spacing: 0.05em; color: var(--wsc-muted); font-size: var(--wsc-step--1); margin: 0; }
-  .coaches { color: var(--wsc-muted); }
   .content { margin: var(--wsc-space-3) 0; }
+
+  .team-photo { margin: var(--wsc-space-3) 0 var(--wsc-space-4); }
+  .team-photo figcaption {
+    margin-top: var(--wsc-space-1);
+    font-size: var(--wsc-step--1);
+    color: var(--wsc-muted);
+    font-style: italic;
+  }
+
+  .roster { margin-top: var(--wsc-space-6); }
+  .roster h2 { border-bottom: 2px solid var(--wsc-line); padding-bottom: 0.4rem; }
+  .roster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--wsc-space-4) var(--wsc-space-2);
+    margin-top: var(--wsc-space-3);
+  }
 </style>

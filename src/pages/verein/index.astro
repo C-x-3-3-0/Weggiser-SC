@@ -3,23 +3,41 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Verein">
   <section class="wrap">
+    <p class="eyebrow">Weggiser Sportclub</p>
     <h1>Verein</h1>
-    <p>Der Weggiser Sportclub wurde am 19.11.1955 von Anton „Pulcy“ Ebnöther und 11 Lehrlingen gegründet. Heute zählt der Verein rund 363 Mitglieder in den Kategorien Aktive, Senioren, Junioren, Juniorinnen, Passiv und Ehrenmitglieder.</p>
+    <p class="lead">Der Weggiser Sportclub wurde am 19.11.1955 von Anton „Pulcy“ Ebnöther und 11 Lehrlingen gegründet. Heute zählt der Verein rund 363 Mitglieder in den Kategorien Aktive, Senioren, Junioren, Juniorinnen, Passiv und Ehrenmitglieder.</p>
     <div class="link-grid">
       <a class="card" href="/verein/vorstand"><h3>Vorstand</h3><p>Die Mitglieder des Vorstands.</p></a>
-      <a class="card" href="/verein/schiedsrichter"><h3>Schiedsrichter</h3><p>Unsere Schiedsrichter*innen.</p></a>
+      <a class="card" href="/verein/schiedsrichter"><h3>Schiedsrichter*innen</h3><p>Unsere Schiedsrichter*innen.</p></a>
       <a class="card" href="/verein/goenner"><h3>Gönner</h3><p>100er Club &amp; Gönnerclub pro WSC.</p></a>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 800px; }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wsc-brand-primary);
+    font-weight: 700;
+    font-size: var(--wsc-step--1);
+    margin: 0;
+  }
+  .lead { color: var(--wsc-muted); }
   .link-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--wsc-space-3);
     margin-top: var(--wsc-space-4);
   }
-  .link-grid a { text-decoration: none; color: var(--wsc-ink); }
+  .link-grid a {
+    text-decoration: none;
+    color: var(--wsc-ink);
+    border-left: 4px solid var(--wsc-brand-primary);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .link-grid a:hover { border-left-color: var(--wsc-brand-secondary); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); }
+  .link-grid h3 { margin-top: 0; }
+  .link-grid p { margin-bottom: 0; color: var(--wsc-muted); }
 </style>

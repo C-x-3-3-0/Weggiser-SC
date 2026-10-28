@@ -16,6 +16,8 @@ const teams = defineCollection({
     name: z.string(),
     category: z.enum(['Aktive', 'Senioren', 'Junioren', 'Maedchen']),
     coaches: z.array(z.string()).default([]),
+    players: z.array(z.string()).default([]),
+    photoCaption: z.string().optional(),
     ifvTeamId: z.string().optional(),
     order: z.number().default(0),
   }),
@@ -30,4 +32,13 @@ const vorstand = defineCollection({
   }),
 });
 
-export const collections = { news, teams, vorstand };
+const schiedsrichter = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/schiedsrichter' }),
+  schema: z.object({
+    name: z.string(),
+    role: z.string().default('Schiedsrichter*in'),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { news, teams, vorstand, schiedsrichter };

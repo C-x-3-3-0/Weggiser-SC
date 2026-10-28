@@ -3,17 +3,17 @@
    logo (src/assets/brand/wsc-logo.png) with a Node script equivalent to the
    skill's scripts/extract_palette.py (python3/Pillow weren't available
    here). The logo's three regions: near-black "WEGGISER" text #1d1d1b,
-   red player silhouette #d90c20, grey "SPORTCLUB" text #9d9d9c. Raw pixel
-   frequency ranks red/grey highest, but per the skill's "always check the
-   result by eye": pale grey fails WCAG contrast as a link/accent colour
-   (on white, on the dark TV monitor), so primary/secondary are assigned by
-   role fit instead — dark for header/nav, red for accents/highlights/links.
-   A human should still confirm these against the printed logo/jerseys.
+   red player silhouette #d90c20, grey "SPORTCLUB" text #9d9d9c. The red
+   player silhouette is the logo's dominant, most recognisable mark, so it
+   carries the primary role (header, buttons, links, highlights); the
+   wordmark black is the secondary/contrast ink. A human should still
+   confirm these against the printed logo/jerseys.
 */
 :root {
   /* Brand (from logo) — BEGIN BRAND */
-  --wsc-brand-primary: #1d1d1b;   /* logo wordmark black – verify */
-  --wsc-brand-secondary: #d90c20; /* logo red – verify */
+  --wsc-brand-primary: #d90c20;   /* logo red – dominant brand colour */
+  --wsc-brand-primary-dark: #a90918; /* pressed/hover shade of the red */
+  --wsc-brand-secondary: #1d1d1b; /* logo wordmark black – secondary ink accent */
   --wsc-brand-on-primary: #ffffff;
   /* END BRAND */
 

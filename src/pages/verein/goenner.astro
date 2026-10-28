@@ -3,28 +3,131 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import logo100er from '../../assets/brand/logo-100er-club.jpeg';
 import logoGoennerclub from '../../assets/brand/logo-goennerclub-pro-wsc.jpg';
+
+const tiers = [
+  {
+    logo: logo100er,
+    name: '100er Club',
+    price: 'CHF 100.– / Jahr',
+    description: 'Unterstützt gezielt die Nachwuchsförderung – von Material bis Trainingslager.',
+    benefits: [
+      'Namentliche Erwähnung im 100er Club',
+      'Einladung zum jährlichen Gönneranlass',
+      'Direkte Unterstützung der Junioren*innen-Teams',
+    ],
+    mailSubject: 'Beitritt 100er Club',
+  },
+  {
+    logo: logoGoennerclub,
+    name: 'Gönnerclub pro WSC (500er)',
+    price: 'CHF 500.– / Jahr',
+    description: 'Breite Unterstützung für den ganzen Verein – von der Infrastruktur bis zum Spielbetrieb.',
+    benefits: [
+      'Namentliche Erwähnung im Gönnerclub pro WSC',
+      'Einladung zum jährlichen Gönneranlass',
+      'Unterstützung aller Mannschaften und der Infrastruktur',
+    ],
+    mailSubject: 'Beitritt Gönnerclub pro WSC',
+  },
+];
 ---
-<BaseLayout title="Gönner">
-  <section class="wrap">
+<BaseLayout title="Gönner" description="Als Gönner*in des Weggiser Sportclub unterstützen Sie den Nachwuchs und den ganzen Verein – 100er Club oder Gönnerclub pro WSC (500er).">
+  <section class="wrap intro">
+    <p class="eyebrow">Verein</p>
     <h1>Gönner</h1>
-    <div class="grid">
-      <div class="card">
-        <Image src={logo100er} alt="WSC 100er Club" width={320} height={184} class="goenner-logo" />
-        <h3>100er Club</h3>
-        <p>CHF 100.– pro Jahr, unterstützt die Junioren*innen-Förderung.</p>
-      </div>
-      <div class="card">
-        <Image src={logoGoennerclub} alt="Gönnerclub pro WSC" width={320} height={57} class="goenner-logo" />
-        <h3>Gönnerclub pro WSC (500er)</h3>
-        <p>CHF 500.– pro Jahr.</p>
-      </div>
-    </div>
-    <p><a href="/verein">← Zurück zu Verein</a></p>
+    <p class="lead">
+      Der Weggiser Sportclub lebt vom Engagement seiner Mitglieder – und von der Unterstützung
+      seiner Gönner*innen. Mit einem Jahresbeitrag im 100er Club oder im Gönnerclub pro WSC helfen
+      Sie mit, Trainingsmaterial, Trainingslager und die Infrastruktur für rund 363 Mitglieder zu
+      finanzieren.
+    </p>
   </section>
+
+  <section class="wrap tiers">
+    {tiers.map((tier) => (
+      <div class="tier-card">
+        <Image src={tier.logo} alt={tier.name} width={320} height={160} class="tier-logo" />
+        <h2>{tier.name}</h2>
+        <p class="price">{tier.price}</p>
+        <p class="tier-desc">{tier.description}</p>
+        <ul class="benefits">
+          {tier.benefits.map((b) => <li>{b}</li>)}
+        </ul>
+        <a class="btn" href={`mailto:wsc100er@weggisersc.ch?subject=${encodeURIComponent(tier.mailSubject)}`}>Jetzt Mitglied werden →</a>
+      </div>
+    ))}
+  </section>
+
+  <section class="wrap how">
+    <h2>So werden Sie Mitglied</h2>
+    <ol class="steps">
+      <li><strong>Wählen Sie Ihren Beitrag</strong> – 100er Club oder Gönnerclub pro WSC.</li>
+      <li><strong>Schreiben Sie uns</strong> an <a href="mailto:wsc100er@weggisersc.ch">wsc100er@weggisersc.ch</a> mit Ihrem Namen und der Adresse.</li>
+      <li><strong>Wir senden Ihnen den Einzahlungsschein</strong> – nach Zahlungseingang sind Sie offiziell Gönner*in.</li>
+    </ol>
+    <p class="contact-note">Fragen zum Gönnerclub? Schreiben Sie uns jederzeit an <a href="mailto:wsc100er@weggisersc.ch">wsc100er@weggisersc.ch</a>.</p>
+  </section>
+
+  <p class="wrap"><a href="/verein">← Zurück zu Verein</a></p>
 </BaseLayout>
 
 <style>
-  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
-  .grid { display: grid; gap: var(--wsc-space-3); margin: var(--wsc-space-3) 0; }
-  .goenner-logo { display: block; max-width: 220px; height: auto; margin-bottom: var(--wsc-space-2); }
+  .wrap { padding: var(--wsc-space-5) var(--wsc-space-3); max-width: 900px; }
+  .intro { padding-bottom: var(--wsc-space-3); }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wsc-brand-primary);
+    font-weight: 700;
+    font-size: var(--wsc-step--1);
+    margin: 0;
+  }
+  .lead { color: var(--wsc-muted); max-width: 680px; font-size: var(--wsc-step-0); }
+
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--wsc-space-4);
+    padding-top: var(--wsc-space-2);
+  }
+  .tier-card {
+    background: var(--wsc-surface);
+    border: 1px solid var(--wsc-line);
+    border-top: 4px solid var(--wsc-brand-primary);
+    border-radius: var(--wsc-radius);
+    padding: var(--wsc-space-4);
+    display: flex;
+    flex-direction: column;
+  }
+  .tier-card :global(.tier-logo) {
+    display: block;
+    max-width: 200px;
+    height: auto;
+    margin-bottom: var(--wsc-space-2);
+  }
+  .tier-card h2 { margin: 0 0 0.25rem; font-size: var(--wsc-step-2); }
+  .price {
+    font-weight: 700;
+    color: var(--wsc-brand-primary);
+    font-size: var(--wsc-step-1);
+    margin: 0 0 var(--wsc-space-2);
+  }
+  .tier-desc { color: var(--wsc-muted); margin: 0 0 var(--wsc-space-2); }
+  .benefits {
+    margin: 0 0 var(--wsc-space-3);
+    padding-left: 1.2rem;
+    color: var(--wsc-ink);
+  }
+  .benefits li { margin-bottom: 0.3rem; }
+  .tier-card .btn { margin-top: auto; text-align: center; }
+
+  .how { padding-top: var(--wsc-space-5); }
+  .steps {
+    padding-left: 1.3rem;
+    display: grid;
+    gap: var(--wsc-space-2);
+    max-width: 640px;
+  }
+  .steps li { padding-left: 0.3rem; }
+  .contact-note { color: var(--wsc-muted); margin-top: var(--wsc-space-3); }
 </style>

@@ -1,14 +1,40 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PersonCard from '../../components/PersonCard.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const schiedsrichterEntries: CollectionEntry<'schiedsrichter'>[] = await getCollection('schiedsrichter');
+const schiedsrichter = schiedsrichterEntries.sort((a, b) => a.data.order - b.data.order);
 ---
 <BaseLayout title="Schiedsrichter">
   <section class="wrap">
-    <h1>Schiedsrichter</h1>
-    <p>Inhalte folgen.</p>
+    <p class="eyebrow">Verein</p>
+    <h1>Schiedsrichter*innen</h1>
+    <p class="lead">Unsere Schiedsrichter*innen leiten die Heimspiele auf der Thermoplan Arena und der Black&amp;White Arena.</p>
+    <div class="roster-grid">
+      {schiedsrichter.map((person) => (
+        <PersonCard name={person.data.name} role={person.data.role} />
+      ))}
+    </div>
     <p><a href="/verein">← Zurück zu Verein</a></p>
   </section>
 </BaseLayout>
 
 <style>
-  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 760px; }
+  section.wrap { padding: var(--wsc-space-6) var(--wsc-space-3); max-width: 900px; }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wsc-brand-primary);
+    font-weight: 700;
+    font-size: var(--wsc-step--1);
+    margin: 0;
+  }
+  .lead { color: var(--wsc-muted); max-width: 560px; }
+  .roster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--wsc-space-4) var(--wsc-space-2);
+    margin: var(--wsc-space-4) 0;
+  }
 </style>

@@ -41,16 +41,16 @@ const groups = [
   {groups.map((group) => (
     <div class="sponsor-group">
       <p class="sponsor-label">{group.label}</p>
-      <ul class="plain sponsor-list">
+      <ul class="sponsor-list">
         {group.sponsors.map((s) => (
           <li>
             {s.href ? (
               <a href={s.href} rel="noopener sponsored" class="sponsor-logo">
-                <Image src={s.logo} alt={s.name} width={160} height={60} format="png" />
+                <Image src={s.logo} alt={s.name} width={220} height={90} format="png" />
               </a>
             ) : (
               <span class="sponsor-logo">
-                <Image src={s.logo} alt={s.name} width={160} height={60} format="png" />
+                <Image src={s.logo} alt={s.name} width={220} height={90} format="png" />
               </span>
             )}
           </li>
@@ -62,41 +62,52 @@ const groups = [
 </div>
 
 <style>
-  .sponsor-strip { margin-bottom: var(--wsc-space-4); }
-  .sponsor-group { margin-bottom: var(--wsc-space-2); }
+  .sponsor-strip { margin-bottom: var(--wsc-space-4); text-align: center; }
+  .sponsor-group { margin-bottom: var(--wsc-space-4); }
   .sponsor-label {
-    font-size: var(--wsc-step--1);
+    font-size: var(--wsc-step-1);
+    font-family: var(--wsc-font-display);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--wsc-muted);
-    margin: 0 0 0.5rem;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: var(--wsc-brand-secondary);
+    margin: 0 0 var(--wsc-space-2);
   }
   .sponsor-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--wsc-space-2);
+    justify-content: center;
+    gap: var(--wsc-space-3);
   }
+  .sponsor-list li { list-style: none; }
   .sponsor-logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 56px;
-    padding: 0.5em 1em;
+    height: 88px;
+    padding: 0.6em 1.4em;
     background: var(--wsc-paper);
-    border: 1px solid var(--wsc-line);
+    border: 2px solid var(--wsc-line);
     border-radius: var(--wsc-radius);
-    filter: grayscale(1);
-    opacity: 0.8;
-    transition: filter 0.15s, opacity 0.15s;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .sponsor-logo :global(img) {
     display: block;
-    max-height: 32px;
-    max-width: 120px;
+    max-height: 56px;
+    max-width: 160px;
     width: auto;
     height: auto;
   }
-  a.sponsor-logo:hover { filter: grayscale(0); opacity: 1; }
-  .sponsor-note { font-size: var(--wsc-step--1); }
+  a.sponsor-logo:hover,
+  a.sponsor-logo:focus-visible {
+    transform: scale(1.08);
+    border-color: var(--wsc-brand-primary);
+    border-width: 3px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
+  .sponsor-note { font-size: var(--wsc-step-0); font-weight: 600; }
 </style>

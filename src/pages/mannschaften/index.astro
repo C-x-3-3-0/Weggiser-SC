@@ -6,11 +6,11 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 const teamEntries: CollectionEntry<'teams'>[] = await getCollection('teams');
 const teams = teamEntries.sort((a, b) => a.data.order - b.data.order);
 
-const categories: Array<{ key: string; label: string }> = [
-  { key: 'Aktive', label: 'Aktive' },
-  { key: 'Senioren', label: 'Senioren' },
-  { key: 'Junioren', label: 'Junioren*innen' },
-  { key: 'Maedchen', label: 'Mädchen' },
+const categories: Array<{ key: string; label: string; anchor: string }> = [
+  { key: 'Aktive', label: 'Aktive', anchor: 'aktive' },
+  { key: 'Senioren', label: 'Senioren', anchor: 'senioren' },
+  { key: 'Junioren', label: 'Junioren*innen', anchor: 'junioren' },
+  { key: 'Maedchen', label: 'Mädchen', anchor: 'maedchen' },
 ];
 ---
 <BaseLayout title="Mannschaften">
@@ -20,14 +20,13 @@ const categories: Array<{ key: string; label: string }> = [
       const group = teams.filter((t) => t.data.category === cat.key);
       if (group.length === 0) return null;
       return (
-        <div class="category-block">
+        <div class="category-block" id={cat.anchor}>
           <h2>{cat.label}</h2>
           <div class="team-grid">
             {group.map((team) => (
               <TeamCard
                 name={team.data.name}
                 category={cat.label}
-                coaches={team.data.coaches}
                 slug={team.id}
               />
             ))}
